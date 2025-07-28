@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 export default {
   name: 'Home',
@@ -8,17 +8,22 @@ export default {
     const categories = ref([]);
     const descriptionLength = 40;
 
+    const isLoading = ref(true); // NEW: track loading state
+
     async function fetchProducts() {
       try {
+        isLoading.value = true;
         const response = await fetch("https://fakestoreapi.com/products");
         if (!response.ok) throw new Error(`Error fetching: ${response.status}`);
         const data = await response.json();
         products.value = data;
 
-        // Get unique categories (optional)
-        categories.value = [...new Set(data.map(product => product.category))];
+        // Unique categories (with 'all')
+        categories.value = ['all', ...new Set(data.map(product => product.category))];
       } catch (error) {
         console.error("Fetch error:", error);
+      } finally {
+        isLoading.value = false; // stop loading after fetch (success or fail)
       }
     }
 
@@ -27,14 +32,16 @@ export default {
     });
 
     function truncate(text) {
-      return text.length > descriptionLength ? text.slice(0, descriptionLength) + "..." : text;
+      return text.length > descriptionLength
+        ? text.slice(0, descriptionLength) + "..."
+        : text;
     }
 
-    // Expose variables and functions to the template
     return {
       products,
       categories,
-      truncate
+      truncate,
+      isLoading
     };
   }
 };
@@ -74,6 +81,12 @@ export default {
       <h2>{{ product.title }}</h2>
       <p class="desc">{{ truncate(product.description) }}</p>
       <p class="price">${{ product.price }}</p>
+    </div>
+  </div>
+  
+  <div v-if="isLoading" class="text-center p-4">
+    <div class="spinner" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 </template>
