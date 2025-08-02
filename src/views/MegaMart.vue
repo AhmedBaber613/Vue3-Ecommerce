@@ -83,10 +83,8 @@ export default {
       <p class="price">${{ product.price }}</p>
     </div>
   </div>
-  
-  <div v-if="isLoading" class="text-center p-4">
-    <div class="spinner" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
   </div>
 </template>
