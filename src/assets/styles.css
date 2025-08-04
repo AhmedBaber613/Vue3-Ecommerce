@@ -59,6 +59,7 @@ body {
   padding: 5px;
   outline: none;
   background-color: #f3f9fb;
+  display: inline;
 }
 
 .input {
@@ -69,6 +70,7 @@ body {
   width: 500px;
   max-width: 100%; /* prevent overflow */
   font-size: 14px;
+  display: inline;
 }
 
 .input:focus {
@@ -109,6 +111,8 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   flex: 1 1 calc(33.333% - 60px); /* Make cards responsive in rows */
   max-width: 305px;
+  overflow: hidden;
+  position: relative;
 }
 
 .pro-max:hover img,
@@ -222,4 +226,50 @@ nav {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.card-btn {
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.overlay {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: 0.3s ease;
+  position: absolute;
+  z-index: 1;
+}
+
+.display-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-family: sans-serif;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.display-btn:hover {
+  opacity: 1;
+  background-color: #ffae00;
+  color: #ffffff;
+  border: none;
+  transition: 0.3s ease;
+}
+
+.pro-max1:hover .overlay,
+.pro-max:hover .overlay {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  border-radius: 10px;
 }

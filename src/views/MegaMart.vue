@@ -66,7 +66,7 @@ export default {
       </div>
     </div>
     <button class="cart-btn">
-      <img src="123.png" height="20" width="20" />
+      <img src="../assets/123.jpg" height="20" width="20" />
       Cart
     </button>
   </header>
@@ -77,10 +77,15 @@ export default {
       :key="product.id"
       :class="['pro-max', { 'pro-max1': index < 3 }]"
     >
-      <img :src="product.image" class="img" />
-      <h2>{{ product.title }}</h2>
-      <p class="desc">{{ truncate(product.description) }}</p>
-      <p class="price">${{ product.price }}</p>
+      <p>
+        <img :src="product.image" class="img" />
+        <h2>{{ product.title }}</h2>
+        <p class="desc">{{ truncate(product.description) }}</p>
+        <p class="price">${{ product.price }}</p>
+      </p>
+      <div class="overlay">
+        <button class="display-btn">Add to cart🛒</button>
+      </div>
     </div>
   </div>
 
