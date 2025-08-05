@@ -4,44 +4,46 @@ import { ref, onMounted, computed } from 'vue';
 export default {
   name: 'Home',
   setup() {
-    const products = ref([]);
-    const categories = ref([]);
-    const descriptionLength = 40;
+    const products = ref([])
+    const categories = ref([])
+    const descriptionLength = 40
+    const addToCart = ref(0)
 
-    const isLoading = ref(true); // NEW: track loading state
+    const isLoading = ref(true) // NEW: track loading state
 
     async function fetchProducts() {
       try {
-        isLoading.value = true;
-        const response = await fetch("https://fakestoreapi.com/products");
-        if (!response.ok) throw new Error(`Error fetching: ${response.status}`);
-        const data = await response.json();
-        products.value = data;
+        isLoading.value = true
+        const response = await fetch("https://fakestoreapi.com/products")
+        if (!response.ok) throw new Error(`Error fetching: ${response.status}`)
+        const data = await response.json()
+        products.value = data
 
         // Unique categories (with 'all')
-        categories.value = ['all', ...new Set(data.map(product => product.category))];
+        categories.value = ['all', ...new Set(data.map(product => product.category))]
       } catch (error) {
-        console.error("Fetch error:", error);
+        console.error("Fetch error:", error)
       } finally {
-        isLoading.value = false; // stop loading after fetch (success or fail)
+        isLoading.value = false // stop loading after fetch (success or fail)
       }
     }
 
     onMounted(() => {
-      fetchProducts();
+      fetchProducts()
     });
 
     function truncate(text) {
       return text.length > descriptionLength
         ? text.slice(0, descriptionLength) + "..."
-        : text;
+        : text
     }
 
     return {
       products,
       categories,
       truncate,
-      isLoading
+      isLoading,
+      addToCart
     };
   }
 };
@@ -67,7 +69,9 @@ export default {
     </div>
     <button class="cart-btn">
       <img src="../assets/123.jpg" height="20" width="20" />
-      Cart
+      <p class="cart-label">
+        Cart <span class="custom-badge">{{ addToCart }}</span>
+      </p>
     </button>
   </header>
 
@@ -84,7 +88,7 @@ export default {
         <p class="price">${{ product.price }}</p>
       </p>
       <div class="overlay">
-        <button class="display-btn">Add to cart🛒</button>
+        <button class="display-btn" @click="addToCart++">Add to cart🛒</button>
       </div>
     </div>
   </div>
