@@ -97,3 +97,6 @@ export default {
     <div class="loader"></div>
   </div>
 </template>
+
+//https://www.youtube.com/watch?v=CNJqWcp09Qc
+//https://www.youtube.com/shorts/1NNx1e4RJJY
