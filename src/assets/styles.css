@@ -252,12 +252,13 @@ nav {
   font-family: sans-serif;
   cursor: pointer;
   z-index: 2;
+  color: black;
 }
 
 .display-btn:hover {
   opacity: 1;
   background-color: #ffae00;
-  color: #ffffff;
+  color: black;
   border: none;
   transition: 0.3s ease;
 }
