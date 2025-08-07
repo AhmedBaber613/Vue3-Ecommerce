@@ -1,99 +1,45 @@
-<script>
-import { ref, onMounted, computed } from 'vue';
+<script setup>
+import { ref, onMounted } from 'vue'
+import MegaMartComp from '../components/MegamartComp.vue'
 
-export default {
-  name: 'Home',
-  setup() {
-    const products = ref([])
-    const categories = ref([])
-    const descriptionLength = 40
-    const addToCart = ref(0)
+const products = ref([])
+const categories = ref([])
+const addToCart = ref(0)
+const isLoading = ref(true)
+const descriptionLength = 40
 
-    const isLoading = ref(true) // NEW: track loading state
-
-    async function fetchProducts() {
-      try {
-        isLoading.value = true
-        const response = await fetch("https://fakestoreapi.com/products")
-        if (!response.ok) throw new Error(`Error fetching: ${response.status}`)
-        const data = await response.json()
-        products.value = data
-
-        // Unique categories (with 'all')
-        categories.value = ['all', ...new Set(data.map(product => product.category))]
-      } catch (error) {
-        console.error("Fetch error:", error)
-      } finally {
-        isLoading.value = false // stop loading after fetch (success or fail)
-      }
-    }
-
-    onMounted(() => {
-      fetchProducts()
-    });
-
-    function truncate(text) {
-      return text.length > descriptionLength
-        ? text.slice(0, descriptionLength) + "..."
-        : text
-    }
-
-    return {
-      products,
-      categories,
-      truncate,
-      isLoading,
-      addToCart
-    };
+async function fetchProducts() {
+  try {
+    isLoading.value = true
+    const response = await fetch("https://fakestoreapi.com/products")
+    if (!response.ok) throw new Error(`Error fetching: ${response.status}`)
+    const data = await response.json()
+    products.value = data
+    categories.value = ['all', ...new Set(data.map(p => p.category))]
+  } catch (err) {
+    console.error("Fetch error:", err)
+  } finally {
+    isLoading.value = false
   }
-};
+}
+
+function truncate(text) {
+  return text.length > descriptionLength
+    ? text.slice(0, descriptionLength) + "..."
+    : text
+}
+
+onMounted(() => {
+  fetchProducts()
+})
 </script>
 
 <template>
-  <header class="header">
-    <div class="header-left">
-      <p class="m">M</p>
-      <span>Mega Mart</span>
-      <div class="drop-down-banner">
-        <select id="dropdown">
-          <option
-            v-for="category in categories"
-            :key="category"
-            :value="category"
-          >
-            {{ category }}
-          </option>
-        </select>
-        <input type="text" placeholder="Search..." class="input" />
-      </div>
-    </div>
-    <button class="cart-btn">
-      <img src="../assets/123.jpg" height="20" width="20" />
-      <p class="cart-label">
-        Cart <span class="custom-badge">{{ addToCart }}</span>
-      </p>
-    </button>
-  </header>
-
-  <div class="parent-container">
-    <div
-      v-for="(product, index) in products"
-      :key="product.id"
-      :class="['pro-max', { 'pro-max1': index < 3 }]"
-    >
-      <p>
-        <img :src="product.image" class="img" />
-        <h2>{{ product.title }}</h2>
-        <p class="desc">{{ truncate(product.description) }}</p>
-        <p class="price">${{ product.price }}</p>
-      </p>
-      <div class="overlay">
-        <button class="display-btn" @click="addToCart++">Add to cart🛒</button>
-      </div>
-    </div>
-  </div>
-
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
+  <MegaMartComp
+    :products="products"
+    :categories="categories"
+    :addToCart="addToCart"
+    :isLoading="isLoading"
+    :truncate="truncate"
+  />
 </template>
